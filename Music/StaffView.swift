@@ -47,6 +47,8 @@ struct Note: Notation {
     var octave: Octave
 }
 
+
+//Implement setup and drawing
 class BassStaffView: Staff {
     
     var cleffView: UIView!
@@ -56,37 +58,36 @@ class BassStaffView: Staff {
         super.awakeFromNib()
         
         let cleffView = BassCleffView(frame: self.frame)
-        let cleffWidth = 50
-        //bass.resizeToFit(withWidth: CGFloat(cleffWidth))
         self.addSubview(cleffView)
     }
 }
 
 class TrebleStaffView: Staff {
     
-    //visibility, E4 - F5, outside draw ledger
-    //note range, C4 - C8
-    
     var cleffView: UIView!
     override lazy var numKeys: CGFloat = { 29 } ()
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        let trebleFrame = CGRect(origin: .zero, size: self.frame.size.scale(by: 1.5))
-        self.cleffView = TrebleCleffView(frame: trebleFrame)
-        self.cleffView.center = self.frame.center
-        let cleffWidth = 50
-        //treble.resizeToFit(withWidth: CGFloat(cleffWidth))
-       // self.addSubview(self.cleffView)
-    }
     
     override func setupView() {
-        
-        let cleffBottomNote = Note(pitch: .C, duration: .none, durationModifier: .none, octave: .c4)
-        let cleffTopNote = Note(pitch: .B, duration: .none, durationModifier: .none, octave: .c5)
-
+        drawCleff()
         drawLines()
-        
+    }
+    
+    private func drawCleff() {
+        let cleffBottomNote = Note(pitch: .C, duration: .none, durationModifier: .none, octave: .c4)
+        let cleffTopNote = Note(pitch: .A, duration: .none, durationModifier: .none, octave: .c5)
+    
+        guard let topBound = position(for: cleffTopNote), let bottomBound = position(for: cleffBottomNote) else {
+        return
+        }
+        let topPos = placemarks[topBound]
+        let bottomPos = placemarks[bottomBound]
+    
+        var trebleFrame = CGRect(origin: .zero, size: CGSize(width: 50, height: self.frame.size.height))
+        trebleFrame.origin.y = self.frame.height - topPos
+        trebleFrame.size.height = topPos - bottomPos + self.intervalDistance
+        self.cleffView = TrebleCleffView(frame: trebleFrame)
+        self.addSubview(self.cleffView)
     }
     
     private func drawLines() {
@@ -121,8 +122,8 @@ class TrebleStaffView: Staff {
         
         let base = { () -> Int in
             switch note.pitch {
-            case .A: return -1
-            case .B: return -2
+            case .A: return 5
+            case .B: return 6
             case .C: return 0
             case .D: return 1
             case .E: return 2
@@ -148,7 +149,6 @@ class TrebleStaffView: Staff {
         }
 
         return keyCount * offset! + base
-
     }
     
     private func draw(note: Note, at index: Int) {

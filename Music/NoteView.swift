@@ -80,7 +80,8 @@ class NoteView: UIView {
         frontLayer.path = bezier2Path.fit(into: self.frame.scale(by: 0.5)).moveCenter(to: frontLayer.position).cgPath
         frontLayer.fillColor = self.fillColor.cgColor
         frontLayer.strokeColor = self.fillColor.cgColor
-        frontLayer.lineWidth = 5
+        frontLayer.lineWidth = 4
+        
         
         self.layer.addSublayer(backLayer)
         self.layer.addSublayer(frontLayer)

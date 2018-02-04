@@ -20,7 +20,8 @@ class ViewController: UIViewController {
         let notes = [Note(pitch: .F, duration: .whole, durationModifier: .none, octave: .c4),
                      Note(pitch: .E, duration: .whole, durationModifier: .none, octave: .c5),
                      Note(pitch: .D, duration: .whole, durationModifier: .none, octave: .c4),
-                     Note(pitch: .E, duration: .whole, durationModifier: .none, octave: .c4),]
+                     Note(pitch: .E, duration: .whole, durationModifier: .none, octave: .c4),
+                     Note(pitch: .C, duration: .whole, durationModifier: .none, octave: .c4)]
         staffView.layoutSubviews()
         notes.forEach { note in
             staffView.draw(notation: note)
